@@ -1,0 +1,525 @@
+<html><head></head><body><div class="apidocDiv">
+<style>
+/*csslint
+*/
+.apidocDiv {
+    background: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.apidocDiv a[href] {
+    color: #33f;
+    font-weight: bold;
+    text-decoration: none;
+}
+.apidocDiv a[href]:hover {
+    text-decoration: underline;
+}
+.apidocCodeCommentSpan {
+    background: #bbf;
+    color: #000;
+    display: block;
+}
+.apidocCodeKeywordSpan {
+    color: #d00;
+    font-weight: bold;
+}
+.apidocCodePre {
+    background: #eef;
+    border: 1px solid;
+    color: #777;
+    padding: 5px;
+    white-space: pre-wrap;
+}
+.apidocFooterDiv {
+    margin-top: 20px;
+    text-align: center;
+}
+.apidocModuleLi {
+    margin-top: 10px;
+}
+.apidocSectionDiv {
+    border-top: 1px solid;
+    margin-top: 20px;
+}
+.apidocSignatureSpan {
+    color: #777;
+    font-weight: bold;
+}
+</style>
+<h1>api documentation for
+    <a href="https://github.com/traviswimer/resize-crop.js">resize-crop (v0.0.3)</a>
+</h1>
+<h4>Make images a specific size without distorting the aspect ratio. Resizes as close as possible and crops the rest.</h4>
+<div class="apidocSectionDiv"><a href="#apidoc.tableOfContents" id="apidoc.tableOfContents"><h1>table of contents</h1></a><ol>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.resize-crop">module resize-crop</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.resize-crop.resize-crop">
+            function <span class="apidocSignatureSpan"></span>resize-crop
+            <span class="apidocSignatureSpan">( options, callback )</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.resize-crop.Gruntfile">
+            function <span class="apidocSignatureSpan">resize-crop.</span>Gruntfile
+            <span class="apidocSignatureSpan">(grunt)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.resize-crop.require_helper">
+            function <span class="apidocSignatureSpan">resize-crop.</span>require_helper
+            <span class="apidocSignatureSpan">(path)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.resize-crop.toString">
+            function <span class="apidocSignatureSpan">resize-crop.</span>toString
+            <span class="apidocSignatureSpan">()</span>
+            </a>
+
+        </li>
+
+    </ol></li>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.resize-crop.Gruntfile">module resize-crop.Gruntfile</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.resize-crop.Gruntfile.Gruntfile">
+            function <span class="apidocSignatureSpan">resize-crop.</span>Gruntfile
+            <span class="apidocSignatureSpan">(grunt)</span>
+            </a>
+
+        </li>
+
+    </ol></li>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.resize-crop.require_helper">module resize-crop.require_helper</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.resize-crop.require_helper.require_helper">
+            function <span class="apidocSignatureSpan">resize-crop.</span>require_helper
+            <span class="apidocSignatureSpan">(path)</span>
+            </a>
+
+        </li>
+
+    </ol></li>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.resize-crop.toString">module resize-crop.toString</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.resize-crop.toString.toString">
+            function <span class="apidocSignatureSpan">resize-crop.</span>toString
+            <span class="apidocSignatureSpan">()</span>
+            </a>
+
+        </li>
+
+    </ol></li>
+
+</ol></div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.resize-crop" id="apidoc.module.resize-crop">module resize-crop</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.resize-crop.resize-crop" id="apidoc.element.resize-crop.resize-crop">
+        function <span class="apidocSignatureSpan"></span>resize-crop
+        <span class="apidocSignatureSpan">( options, callback )</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">resize-crop = function ( options, callback ) {
+
+	// Default config
+	var config = {
+		format: "png",
+		gravity: "center",
+		src: false,
+		dest: false,
+		height: 0,
+		width: 0
+	};
+
+	// Override defaults with supplied options
+	deepExtend(config, options);
+
+
+	var src = config.src;
+	var dest = config.dest;
+
+	// make sure specified image exists
+	if( !fs.existsSync(src) ){
+		callback( new Error('Image file "' + src + '" not found.') );
+	}else{
+
+		// Get original image dimensions
+		var srcDimensions = imageSize( src );
+
+		var newFilePath = dest;
+
+
+		var resizeconfig = {
+			srcPath: src,
+			dstPath: dest,
+			format: config.format,
+			strip: true
+		};
+
+		// Make sure neither image dimension is reduced smaller than
+		// the requirements
+		var heightRatio = config.height / srcDimensions.height;
+		var widthRatio = config.width / srcDimensions.width;
+
+		if( heightRatio &gt; widthRatio ){
+			resizeconfig.height = config.height;
+		}else{
+			resizeconfig.width = config.width;
+		}
+
+		// for some reason height/width of 0 throws an error instead of
+		// passing it as the `err` parameter
+		try{
+			magick.resize(resizeconfig, function(err, stdout, stderr){
+
+				var cropconfig = {
+					srcPath: dest,
+					dstPath: dest,
+					gravity: config.gravity,
+					height: config.height,
+					width: config.width
+				};
+
+				magick.crop(cropconfig, function(err, stdout, stderr){
+					callback(err, dest);
+				});
+
+			});
+		}catch(e){
+			callback(e, null);
+		}
+
+	}
+
+
+
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.resize-crop.Gruntfile" id="apidoc.element.resize-crop.Gruntfile">
+        function <span class="apidocSignatureSpan">resize-crop.</span>Gruntfile
+        <span class="apidocSignatureSpan">(grunt)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">Gruntfile = function (grunt) {
+
+	// Project configuration.
+	grunt.initConfig({
+		jshint: {
+			all: [
+				'Gruntfile.js',
+				'src/**/*.js'
+			],
+			options: {
+				jshintrc: '.jshintrc',
+			},
+		},
+
+		// Before generating any new files, remove any previously-created files.
+		clean: {
+			tests: ['tests/tmp/*']
+		},
+
+		// For istanbul
+		env: {
+			coverage: {
+				APP_DIR_FOR_CODE_COVERAGE: '../tests/coverage/instrument/src/'
+			}
+		},
+
+		// Unit tests.
+		mochaTest: {
+			test: {
+				options: {
+					reporter: 'spec',
+					timeout: 10000
+				},
+				src: ['tests/unit/*_test.js']
+			}
+		},
+
+
+		not_constantinople: {
+			coverage: {
+				options: {
+					unitTestTask: "mochaTest",
+					directories: {
+						root: 'tests',
+						coverage: 'coverage',
+						sourceFiles: 'src'
+					},
+					thresholds: {
+						'statements': 100,
+						'branches': 100,
+						'lines': 100,
+						'functions': 100
+					}
+				}
+			}
+		},
+
+		coveralls: {
+			options: {
+				force: true
+			},
+			all: {
+				src: 'tests/coverage/reports/lcov.info'
+			}
+		},
+
+		watch: {
+			scripts: {
+				files: [
+					'tests/unit/*.js',
+					'src/**/*.js'
+				],
+				tasks: ['test'],
+			},
+		},
+
+	});
+
+
+	// Load grunt tasks
+	grunt.loadNpmTasks('grunt-contrib-jshint');
+	grunt.loadNpmTasks('grunt-contrib-clean');
+	grunt.loadNpmTasks('grunt-env');
+	grunt.loadNpmTasks('grunt-mocha-test');
+	grunt.loadNpmTasks('grunt-not-constantinople');
+	grunt.loadNpmTasks('grunt-coveralls');
+	grunt.loadNpmTasks('grunt-contrib-watch');
+
+
+	// Removes images created from past tests and runs tests
+	grunt.registerTask('test', ['jshint', 'clean:tests', 'env:coverage', 'not_constantinople']);
+
+	grunt.registerTask('default', ['watch']);
+
+
+
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.resize-crop.require_helper" id="apidoc.element.resize-crop.require_helper">
+        function <span class="apidocSignatureSpan">resize-crop.</span>require_helper
+        <span class="apidocSignatureSpan">(path)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">require_helper = function (path) {
+	return require((process.env.APP_DIR_FOR_CODE_COVERAGE || '../src/') + path);
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.resize-crop.toString" id="apidoc.element.resize-crop.toString">
+        function <span class="apidocSignatureSpan">resize-crop.</span>toString
+        <span class="apidocSignatureSpan">()</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">toString = function () {
+    return text;
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+</div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.resize-crop.Gruntfile" id="apidoc.module.resize-crop.Gruntfile">module resize-crop.Gruntfile</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.resize-crop.Gruntfile.Gruntfile" id="apidoc.element.resize-crop.Gruntfile.Gruntfile">
+        function <span class="apidocSignatureSpan">resize-crop.</span>Gruntfile
+        <span class="apidocSignatureSpan">(grunt)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">Gruntfile = function (grunt) {
+
+	// Project configuration.
+	grunt.initConfig({
+		jshint: {
+			all: [
+				'Gruntfile.js',
+				'src/**/*.js'
+			],
+			options: {
+				jshintrc: '.jshintrc',
+			},
+		},
+
+		// Before generating any new files, remove any previously-created files.
+		clean: {
+			tests: ['tests/tmp/*']
+		},
+
+		// For istanbul
+		env: {
+			coverage: {
+				APP_DIR_FOR_CODE_COVERAGE: '../tests/coverage/instrument/src/'
+			}
+		},
+
+		// Unit tests.
+		mochaTest: {
+			test: {
+				options: {
+					reporter: 'spec',
+					timeout: 10000
+				},
+				src: ['tests/unit/*_test.js']
+			}
+		},
+
+
+		not_constantinople: {
+			coverage: {
+				options: {
+					unitTestTask: "mochaTest",
+					directories: {
+						root: 'tests',
+						coverage: 'coverage',
+						sourceFiles: 'src'
+					},
+					thresholds: {
+						'statements': 100,
+						'branches': 100,
+						'lines': 100,
+						'functions': 100
+					}
+				}
+			}
+		},
+
+		coveralls: {
+			options: {
+				force: true
+			},
+			all: {
+				src: 'tests/coverage/reports/lcov.info'
+			}
+		},
+
+		watch: {
+			scripts: {
+				files: [
+					'tests/unit/*.js',
+					'src/**/*.js'
+				],
+				tasks: ['test'],
+			},
+		},
+
+	});
+
+
+	// Load grunt tasks
+	grunt.loadNpmTasks('grunt-contrib-jshint');
+	grunt.loadNpmTasks('grunt-contrib-clean');
+	grunt.loadNpmTasks('grunt-env');
+	grunt.loadNpmTasks('grunt-mocha-test');
+	grunt.loadNpmTasks('grunt-not-constantinople');
+	grunt.loadNpmTasks('grunt-coveralls');
+	grunt.loadNpmTasks('grunt-contrib-watch');
+
+
+	// Removes images created from past tests and runs tests
+	grunt.registerTask('test', ['jshint', 'clean:tests', 'env:coverage', 'not_constantinople']);
+
+	grunt.registerTask('default', ['watch']);
+
+
+
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+</div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.resize-crop.require_helper" id="apidoc.module.resize-crop.require_helper">module resize-crop.require_helper</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.resize-crop.require_helper.require_helper" id="apidoc.element.resize-crop.require_helper.require_helper">
+        function <span class="apidocSignatureSpan">resize-crop.</span>require_helper
+        <span class="apidocSignatureSpan">(path)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">require_helper = function (path) {
+	return require((process.env.APP_DIR_FOR_CODE_COVERAGE || '../src/') + path);
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+</div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.resize-crop.toString" id="apidoc.module.resize-crop.toString">module resize-crop.toString</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.resize-crop.toString.toString" id="apidoc.element.resize-crop.toString.toString">
+        function <span class="apidocSignatureSpan">resize-crop.</span>toString
+        <span class="apidocSignatureSpan">()</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function toString() { [native code] }</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+</div>
+
+<div class="apidocFooterDiv">
+    [ this document was created with
+    <a href="https://github.com/kaizhu256/node-utility2" target="_blank">utility2</a>
+    ]
+</div>
+</div>
+</body></html>
