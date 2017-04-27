@@ -1,6 +1,6 @@
 # npmdoc-resize-crop
 
-#### api documentation for  [resize-crop (v0.0.3)](https://github.com/traviswimer/resize-crop.js)  [![npm package](https://img.shields.io/npm/v/npmdoc-resize-crop.svg?style=flat-square)](https://www.npmjs.org/package/npmdoc-resize-crop) [![travis-ci.org build-status](https://api.travis-ci.org/npmdoc/node-npmdoc-resize-crop.svg)](https://travis-ci.org/npmdoc/node-npmdoc-resize-crop)
+#### basic api documentation for  [resize-crop (v0.0.3)](https://github.com/traviswimer/resize-crop.js)  [![npm package](https://img.shields.io/npm/v/npmdoc-resize-crop.svg?style=flat-square)](https://www.npmjs.org/package/npmdoc-resize-crop) [![travis-ci.org build-status](https://api.travis-ci.org/npmdoc/node-npmdoc-resize-crop.svg)](https://travis-ci.org/npmdoc/node-npmdoc-resize-crop)
 
 #### Make images a specific size without distorting the aspect ratio. Resizes as close as possible and crops the rest.
 
@@ -83,7 +83,8 @@
         "ci": "grunt test --stack",
         "test": "grunt test"
     },
-    "version": "0.0.3"
+    "version": "0.0.3",
+    "bin": {}
 }
 ```
 
